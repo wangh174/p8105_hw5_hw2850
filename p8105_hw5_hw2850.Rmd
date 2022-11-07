@@ -23,3 +23,11 @@ The raw data contains the homicides victims' information including the reported
 date, victims' names, victims' age, victims' race, victims' sex, the cities and
 the states that homicides occurred, the precise location of homicides (latitude,
 longitude), and the disposition/result of homicides. 
+
+```{r}
+homicide_city_state = read_csv("data/homicide-data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(.data = ., city_state = str_c(city, "," ,state)) %>% 
+  select(-city, -state)
+```
+
