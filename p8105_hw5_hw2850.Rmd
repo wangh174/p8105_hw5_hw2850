@@ -1,5 +1,22 @@
 ---
 title: "p8105_hw5_hw2850"
+author: "Haoyang Wang"
+date: "2022-11-06"
 output: github_document
 ---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r} 
+library(tidyverse)
+
+```
+
+#Problem 2
+```{r}
+homicide_raw = read_csv("data/homicide-data.csv") %>% 
+  janitor::clean_names()
+```
 
