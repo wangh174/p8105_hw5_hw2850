@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r} 
 library(tidyverse)
-
+library(rvest)
 ```
 
 #Problem 2
@@ -33,7 +33,7 @@ homicide_city_state = read_csv("data/homicide-data.csv") %>%
     disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved homicides", "homicides")
   )
 ```
-Group "Closed without arrest" and "Open/No arrest" into category "unsolved homicides". Group "Closed by arrest" into category "homicides".
+Combine variables "cities" and "states" into one variable "city_state". Group "Closed without arrest" and "Open/No arrest" into category "unsolved homicides". Group "Closed by arrest" into category "homicides".
 
 ```{r}
 homicide_by_cities = homicide_city_state %>% 
@@ -41,5 +41,14 @@ homicide_by_cities = homicide_city_state %>%
   summarize(n_obs = n())
 ```
 Summarize within cities to obtain the total number of homicides and the number of unsolved homicides.
+
+```{r}
+homicide_pivot = pivot_wider(
+  homicide_by_cities,
+  names_from = "disposition",
+  values_from = "n_obs"
+)
+```
+Pivot_wider the homicide_by_cities dataset
 
 
