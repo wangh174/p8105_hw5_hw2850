@@ -30,7 +30,7 @@ homicide_city_state = read_csv("data/homicide-data.csv") %>%
   mutate(.data = ., city_state = str_c(city, ", " ,state)) %>% 
   select(-city, -state) %>% 
   mutate(
-    disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved homicides", "homicides")
+    disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved_homicides", "homicides")
   )
 ```
 Combine variables "cities" and "states" into one variable "city_state". Group "Closed without arrest" and "Open/No arrest" into category "unsolved homicides". Group "Closed by arrest" into category "homicides".
@@ -51,4 +51,10 @@ homicide_pivot = pivot_wider(
 ```
 Pivot_wider the homicide_by_cities dataset
 
-
+```{r}
+homicide_pivot = 
+  mutate(homicide_pivot,
+  total = homicides + unsolved_homicides
+)
+```
+Add a total column for the total number of homicides
