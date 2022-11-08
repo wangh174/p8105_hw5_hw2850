@@ -27,7 +27,12 @@ longitude), and the disposition/result of homicides.
 ```{r}
 homicide_city_state = read_csv("data/homicide-data.csv") %>% 
   janitor::clean_names() %>% 
-  mutate(.data = ., city_state = str_c(city, "," ,state)) %>% 
-  select(-city, -state)
+  mutate(.data = ., city_state = str_c(city, ", " ,state)) %>% 
+  select(-city, -state) %>% 
+  mutate(
+    disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved homicides", "homicides")
+  )
 ```
+Group "Closed without arrest" and "Open/No arrest" into category "unsolved homicides". Group "Closed by arrest" into category "homicides".
+
 
