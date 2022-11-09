@@ -46,10 +46,11 @@ Summarize within cities to obtain the total number of homicides and the number o
 homicide_pivot = pivot_wider(
   homicide_by_cities,
   names_from = "disposition",
-  values_from = "n_obs"
-)
+  values_from = "n_obs") 
+
+homicide_pivot[is.na(homicide_pivot)] <- 0 #Change Tulsa, AL NA value to 0
 ```
-Pivot_wider the homicide_by_cities dataset
+Pivot_wider the homicide_by_cities dataset.
 
 ```{r}
 homicide_pivot = 
@@ -57,10 +58,12 @@ homicide_pivot =
   total = homicides + unsolved_homicides
 )
 ```
-Add a total column for the total number of homicides
+Add a total column for the total number of homicides.
 
 ```{r}
-Baltimore = prop.test(1825, 2827) %>% 
+Baltimore = prop.test(x = 1825, n = 2827) %>% 
   broom::tidy()
 ```
 Do prop.test with city Baltimore data. The estimate proportion of unsolved homicides is 0.6455607. The confidence interval is (0.6275625, 0.6631599).
+
+
