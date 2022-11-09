@@ -55,15 +55,15 @@ Pivot_wider the homicide_by_cities dataset.
 ```{r}
 homicide_pivot = 
   mutate(homicide_pivot,
-  total = homicides + unsolved_homicides
-)
+  total = homicides + unsolved_homicides)
 ```
 Add a total column for the total number of homicides.
 
 ```{r}
-Baltimore = prop.test(x = 1825, n = 2827) %>% 
-  broom::tidy()
+Baltimore = homicide_pivot %>% 
+  filter(city_state == "Baltimore, MD")
 ```
-Do prop.test with city Baltimore data. The estimate proportion of unsolved homicides is 0.6455607. The confidence interval is (0.6275625, 0.6631599).
+Filter dataset with only city Baltimore, MD.
+
 
 
