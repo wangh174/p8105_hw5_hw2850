@@ -86,7 +86,16 @@ prop_test = function(homicide_pivot){
   proptest #output
 }
 ```
+Write a function about prop.test.
 
+```{r}
+city_homicides = homicide_pivot %>% 
+  nest(data = unsolved_homicides:total) %>% #nest variables unsolved_homicides and total within tidied homicide_pivot dataset 
+  mutate(results = map(data, prop_test)) %>% 
+  select(city_state, results) %>% 
+  unnest(cols = results) #unnest the results
+```
+Create a dataframe with estimated proportions and CIs for each city by applying function.
 
 
 
