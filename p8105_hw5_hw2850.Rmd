@@ -30,7 +30,7 @@ homicide_city_state = read_csv("data/homicide-data.csv") %>%
   mutate(.data = ., city_state = str_c(city, ", " ,state)) %>% 
   select(-city, -state) %>% 
   mutate(
-    disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved_homicides", "homicides")
+    disposition = if_else(disposition %in% c("Closed without arrest", "Open/No arrest"), "unsolved_homicides", "homicides") 
   )
 ```
 Combine variables "cities" and "states" into one variable "city_state". Group "Closed without arrest" and "Open/No arrest" into category "unsolved homicides". Group "Closed by arrest" into category "homicides".
@@ -55,13 +55,13 @@ Pivot_wider the homicide_by_cities dataset.
 ```{r}
 homicide_pivot = 
   mutate(homicide_pivot,
-  total = homicides + unsolved_homicides)
+  total = homicides + unsolved_homicides) #get a total homicides column by adding homicides and unsolved homicides
 ```
 Add a total column for the total number of homicides.
 
 ```{r}
 Baltimore = homicide_pivot %>% 
-  filter(city_state == "Baltimore, MD")
+  filter(city_state == "Baltimore, MD") #get a Baltimore dataset
 ```
 Filter dataset with only city Baltimore, MD.
 
@@ -96,6 +96,17 @@ city_homicides = homicide_pivot %>%
   unnest(cols = results) #unnest the results
 ```
 Create a dataframe with estimated proportions and CIs for each city by applying function.
+
+```{r}
+city_plot = city_homicides %>% 
+  mutate(city_state, fct_reorder(city_state, estimate)) %>% #order the cities by their estimate proportion
+  ggplot(aes(x = estimate, y = city_state))+
+  geom_point()+
+  geom_errorbar(aes(xmin = conf.low, xmax = conf.high)) #add confidence interval
+
+city_plot  
+```
+Create a plot showing the estimates and confidence intervals for each city.
 
 
 
