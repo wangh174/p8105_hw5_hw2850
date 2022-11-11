@@ -74,5 +74,19 @@ Baltimore_proptest = prop.test(
 ```
 Do prop.test with city Baltimore data. The estimate proportion of unsolved homicides is `r pull(Baltimore_proptest, estimate)`. The confidence interval is between `r pull(Baltimore_proptest, conf.low)` and `r pull(Baltimore_proptest, conf.high)`.
 
+```{r}
+prop_test = function(homicide_pivot){
+  
+  proptest = prop.test(
+    x = pull(homicide_pivot, unsolved_homicides),
+    n = pull(homicide_pivot, total)) %>% 
+    broom::tidy() %>% 
+    select(estimate, conf.low, conf.high)
+  
+  proptest #output
+}
+```
+
+
 
 
