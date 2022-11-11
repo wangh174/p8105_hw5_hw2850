@@ -104,7 +104,9 @@ city_plot = city_homicides %>%
   geom_point()+
   geom_errorbar(aes(xmin = conf.low, xmax = conf.high)) #add confidence interval
 
-city_plot  
+city_plot 
+
+ggsave("50 Large U.S. Cities Unsolved Homicides Proportion Estimate.pdf", plot = city_plot)
 ```
 Create a plot showing the estimates and confidence intervals for each city.
 
