@@ -113,7 +113,7 @@ Create a plot showing the estimates and confidence intervals for each city. From
 
 #Problem 3
 ```{r}
-sim_mean_sd = function(n = 30, mu, sigma = 5) {
+t_test = function(n = 30, mu, sigma = 5) {
   
   sim_data = tibble(
     x = rnorm(n, mean = mu, sd = sigma),
@@ -124,7 +124,19 @@ sim_mean_sd = function(n = 30, mu, sigma = 5) {
 
 }
 ```
-Write a function of a normal distribution with n = 30, sigma = 5
+Write a function of a normal distribution with n = 30, sigma = 5.
 
-
+```{r}
+sim_results_df =
+  expand.grid(
+    sample_size = 30,
+    mu = c(1, 2, 3, 4, 5, 6),
+    iter = 1:5000
+  ) %>% 
+  mutate(
+    estimate_df = map2(.x = sample_size, .y = mu, ~t_test(n = .x, mu = .y))
+  ) %>% 
+  unnest(estimate_df)
+```
+Run the simulation for mu = 1:6 for 5000 times.
 
