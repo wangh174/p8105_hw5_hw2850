@@ -38,7 +38,7 @@ Combine variables "cities" and "states" into one variable "city_state". Group "C
 ```{r}
 homicide_by_cities = homicide_city_state %>% 
   group_by(city_state, disposition) %>% 
-  summarize(n_obs = n())
+  summarize(n_obs = n()) #group by city_state and disposition and count the number
 ```
 Summarize within cities to obtain the total number of homicides and the number of unsolved homicides.
 
@@ -46,9 +46,7 @@ Summarize within cities to obtain the total number of homicides and the number o
 homicide_pivot = pivot_wider(
   homicide_by_cities,
   names_from = "disposition",
-  values_from = "n_obs") 
-
-homicide_pivot[is.na(homicide_pivot)] <- 0 #Change Tulsa, AL NA value to 0
+  values_from = "n_obs") #pivot data wider
 ```
 Pivot_wider the homicide_by_cities dataset.
 
@@ -56,6 +54,9 @@ Pivot_wider the homicide_by_cities dataset.
 homicide_pivot = 
   mutate(homicide_pivot,
   total = homicides + unsolved_homicides) #get a total homicides column by adding homicides and unsolved homicides
+
+homicide_pivot = homicide_pivot %>% 
+  filter(!city_state == "Tulsa, AL") #Remove Tulsa, AL which seems wrong
 ```
 Add a total column for the total number of homicides.
 
@@ -98,9 +99,8 @@ city_homicides = homicide_pivot %>%
 Create a dataframe with estimated proportions and CIs for each city by applying function.
 
 ```{r}
-city_plot = city_homicides %>% 
-  mutate(city_state = fct_reorder(city_state, estimate)) %>% #order the cities by their estimate proportion
-  ggplot(aes(x = estimate, y = city_state))+
+city_plot = city_homicides %>%  
+  ggplot(aes(x = estimate, y = reorder(city_state, estimate)))+ #order the cities by their estimate proportion
   geom_point()+
   geom_errorbar(aes(xmin = conf.low, xmax = conf.high)) #add confidence interval
 
@@ -108,7 +108,7 @@ city_plot
 
 ggsave("50 Large U.S. Cities Unsolved Homicides Proportion Estimate.pdf", plot = last_plot())
 ```
-Create a plot showing the estimates and confidence intervals for each city. From the plot we can see that Chicago, IL has the highest unsolved homicides proportion estimate. Tulsa, AL has the lowest unsolved homicides proportion estimate. However, there were not enough data for Tulsa, AL. The result may not be conclusive.  
+Create a plot showing the estimates and confidence intervals for each city. From the plot we can see that Chicago, IL has the highest unsolved homicides proportion estimate. Richmond, VA has the lowest unsolved homicides proportion estimate. 
 
 
 #Problem 3
@@ -141,7 +141,7 @@ sim_results_df =
 Run the simulation for mu = 1:6 for 5000 times.
 
 ```{r}
-sim_results_df %>% 
+prop_null_rej = sim_results_df %>% 
   group_by(mu) %>% 
   filter(p.value < 0.05) %>% 
   summarize(proportion = n()) %>% 
@@ -152,5 +152,24 @@ sim_results_df %>%
        y = "The Power of the Test",
        title = "The Association Between Effect Size and Power")
 
+prop_null_rej
 ```
-Plot the relationship between the power of the test and true mu.
+Plot the relationship between the power of the test and true mu. From the graph, we can see that as the true value of mu increases, the power of the test increases.
+
+```{r}
+#plot average estimate mu and true mu
+avg_est = sim_results_df %>% 
+  group_by(mu) %>% 
+  summarize(mean_est = mean(estimate))
+
+avg_est_plot = ggplot(avg_est, aes(x = mu, y = mean_est))+
+  geom_point()+
+  labs(
+    title = "Association Between True Mean and Estimated Mean",
+    x = "True Value of Mu",
+    y = "Average Estimate of Mu"
+  )
+
+avg_est_plot
+```
+
