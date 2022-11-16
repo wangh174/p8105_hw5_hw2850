@@ -141,9 +141,10 @@ sim_results_df =
 Run the simulation for mu = 1:6 for 5000 times.
 
 ```{r}
+#Plot proportion of times the null was rejected and the true value of mu
 prop_null_rej = sim_results_df %>% 
   group_by(mu) %>% 
-  filter(p.value < 0.05) %>% 
+  filter(p.value < 0.05) %>% #Null rejected
   summarize(proportion = n()) %>% 
   ggplot(aes(x = mu, y = proportion/5000))+
   geom_point()+
@@ -154,7 +155,7 @@ prop_null_rej = sim_results_df %>%
 
 prop_null_rej
 ```
-Plot the relationship between the power of the test and true mu. From the graph, we can see that as the true value of mu increases, the power of the test increases.
+Plot the relationship between the power of the test and true mu. From the graph, we can see that as the true value of mu increases, the power of the test increases. When the true value of mu increased to an extent, the power of the test reached to 1 which means the difference is large enough that the probability of the test correctly rejects the null hypothesis reached to 100 percent.
 
 ```{r}
 #plot average estimate mu and true mu
@@ -172,4 +173,24 @@ avg_est_plot = ggplot(avg_est, aes(x = mu, y = mean_est))+
 
 avg_est_plot
 ```
+
+```{r}
+#plot average estimate of mu only in null was rejected
+avg_est_rej = sim_results_df %>%
+  filter(p.value < 0.05) %>% 
+  group_by(mu) %>% 
+  summarize(mean_est = mean(estimate))
+
+avg_est_rej_plot = ggplot(avg_est, aes(x = mu, y = mean_est))+
+  geom_point()+
+  labs(
+    title = "Association Between True Mean and Estimated Mean When Null Rejected",
+    x = "True Value of Mu",
+    y = "Average Estimate of Mu"
+  )
+
+avg_est_plot
+```
+The sample average of mu across tests for which the null is rejected approximately equal to the true value of mu because as the true value of mu increases, the power of the test increases, the probability of successfully rejecting the null increases.
+
 
